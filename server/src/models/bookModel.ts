@@ -8,9 +8,24 @@ interface Book {
   author_id: number;
 }
 
-const getBooks = async () => {
-  return db('books');
+// const getBooks = async () => {
+//   return db('books');
+// };
+// bonus
+const getBooks = (limit?: number, offset?: number, search?: string) => {
+  let query = db('books');
+
+  if (search) {
+    query = query.whereILike('title', `%${search}%`);
+  }
+
+  if (limit !== undefined && offset !== undefined) {
+    query = query.limit(limit).offset(offset);
+  }
+
+  return query;
 };
+
 
 const getBookById = async (id: number) => {
   return db('books').where({ id }).first();

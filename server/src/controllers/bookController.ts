@@ -1,10 +1,30 @@
 import { Request, Response } from 'express';
 import * as BookModel from '../models/bookModel';
 
+// const getAllBooks = async (req: Request, res: Response) => {
+//   const books = await BookModel.getBooks();
+//   res.json(books);
+// };
 const getAllBooks = async (req: Request, res: Response) => {
-  const books = await BookModel.getBooks();
-  res.json(books);
+  const { title } = req.query;
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+  const offset = (page - 1) * limit;
+
+  try {
+    const query = BookModel.getBooks().offset(offset).limit(limit);
+
+    if (title) {
+      query.whereILike('title', `%${title}%`);
+    }
+
+    const books = await query;
+    res.json({ page, limit, data: books });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch books' });
+  }
 };
+
 
 const getBook = async (req: Request, res: Response) => {
   const book = await BookModel.getBookById(Number(req.params.id));

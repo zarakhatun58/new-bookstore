@@ -7,9 +7,24 @@ interface Author {
   birthdate: string;
 }
 
-const getAuthors = async () => {
-  return db('authors');
+// const getAuthors = async () => {
+//   return db('authors');
+// };
+//bonus
+const getAuthors = (limit?: number, offset?: number, search?: string) => {
+  let query = db('authors');
+
+  if (search) {
+    query = query.whereILike('name', `%${search}%`);
+  }
+
+  if (limit !== undefined && offset !== undefined) {
+    query = query.limit(limit).offset(offset);
+  }
+
+  return query;
 };
+
 
 const getAuthorById = async (id: number) => {
   return db('authors').where({ id }).first();
