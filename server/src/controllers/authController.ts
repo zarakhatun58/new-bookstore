@@ -34,30 +34,29 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, password } = req.body;
   
-      // Get user by email
+
       const user = await UserModel.getUserByEmail(email);
       if (!user) {
         res.status(404).json({ message: 'User not found' });
-        return;  // Don't forget to return after sending a response
+        return;  
       }
   
-      // Compare password
+     
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         res.status(400).json({ message: 'Invalid credentials' });
-        return;  // Don't forget to return after sending a response
+        return; 
       }
   
-      // Generate JWT token
-    //   const token = generateToken(user.id);
+    
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
-      // Send the token
+      
       res.status(200).json({
         message: 'Login successful',
-        token,  // Send JWT token
+        token, 
       });
     } catch (error) {
-      // Handle any errors
+     
       res.status(500).json({ message: 'Internal server error' });
     }
   };

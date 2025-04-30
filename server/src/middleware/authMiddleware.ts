@@ -5,27 +5,7 @@ export interface TokenPayload {
   id: number;
 }
 
-// export const authenticateToken = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ): void => {
-//   const authHeader = req.headers.authorization;
-//   const token = authHeader?.split(' ')[1];
 
-//   if (!token) {
-//     res.status(401).json({ message: 'No token provided' });
-//     return;
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload;
-//     req.user = decoded;
-//     next();
-//   } catch (error) {
-//     res.status(403).json({ message: 'Invalid token' });
-//   }
-// };
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
   
@@ -38,7 +18,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number };
-      req.user = { id: decoded.userId }; // Attach to request
+      req.user = { id: decoded.userId }; 
       next();
     } catch (error) {
       res.status(401).json({ message: 'Invalid or expired token' });

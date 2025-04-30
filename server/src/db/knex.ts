@@ -3,10 +3,10 @@ dotenv.config();
 import knex from 'knex';
 import { Knex } from 'knex';
 
-// Define the configuration
+
 const config: { [key: string]: Knex.Config } = {
   development: {
-    client: 'mysql2', // or 'pg' for PostgreSQL
+    client: 'mysql2',
     connection: {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
